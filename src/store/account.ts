@@ -25,10 +25,7 @@ export function setAccount(account: Account | null): SetAccountAction {
   };
 }
 
-export function accountsReducer(
-  state: Account | null = accounts.get("test@email.com")!,
-  action: SetAccountAction
-): Account | null {
+export function accountsReducer(state: Account | null = null, action: SetAccountAction): Account | null {
   switch (action.type) {
     case SET_ACCOUNT:
       return action.payload;
