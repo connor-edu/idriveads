@@ -149,7 +149,7 @@ const Login = () => {
                   justify-content: center;
                 }
               `}>
-              <Button onClick={() => setRegister(true)} type={"link"}>
+              <Button onClick={() => setRegister(false)} type={"link"}>
                 Login
               </Button>
             </Form.Item>
