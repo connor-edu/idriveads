@@ -1,10 +1,11 @@
 # Using the app
 
-node 16
+## Install Node
 
+https://nodejs.org/en/
+
+## Install dependencies and run the app
 ```bash
 npm i
 npm start
-
-goto localhost:3000
 ```
