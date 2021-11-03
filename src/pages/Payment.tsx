@@ -36,7 +36,7 @@ const Payment = () => {
               }
             `}>
             <Button htmlType={"submit"} type={"primary"}>
-              Register
+              Submit
             </Button>
           </Form.Item>
         </Card>

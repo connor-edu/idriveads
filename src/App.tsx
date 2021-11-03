@@ -1,20 +1,40 @@
 import { css, cx } from "@emotion/css";
 import { Layout } from "antd";
-import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import { batch, useDispatch, useSelector } from "react-redux";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
+import useSWR from "swr";
 import { container } from "./comonents/container";
+import Loader from "./comonents/Loader";
 import AccountPage from "./pages/AccountPage";
 import AdPage from "./pages/AdPage";
 import Ads from "./pages/Ads";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Payment from "./pages/Payment";
-import type { AppState } from "./store";
+import type { Account, AppState } from "./store";
+import { setAccount } from "./store";
 
 const App = () => {
+  const { data, error } = useSWR<Account>("auth/account", {
+    revalidateOnFocus: false,
+    refreshInterval: 0,
+  });
+
+  const dispatch = useDispatch();
+
   const account = useSelector((state: AppState) => state.account);
-  if (account === null) {
+
+  useEffect(() => {
+    dispatch(setAccount(data ?? null));
+  }, [data]);
+
+  if (error) {
     return <Login />;
+  }
+
+  if (!data || !account) {
+    return <Loader />;
   }
 
   return (

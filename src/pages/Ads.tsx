@@ -1,8 +1,8 @@
 import { Table } from "antd";
 import type { ColumnType } from "antd/lib/table";
 import { Link } from "react-router-dom";
+import useSWR from "swr";
 import type { Ad } from "../ads";
-import { ads } from "../ads";
 
 const columns: Array<ColumnType<Ad>> = [
   {
@@ -27,19 +27,20 @@ const columns: Array<ColumnType<Ad>> = [
     title: "Description",
   },
   {
-    dataIndex: "rpm",
-    title: "RPM",
+    dataIndex: "cpm",
+    title: "CPM",
     sorter: (a, b) => {
-      return a.rpm - b.rpm;
+      return a.cpm - b.cpm;
     },
   },
 ];
 
 const Ads = () => {
+  const { data } = useSWR<Ad[]>("ads");
   return (
     <div>
       <Link to={"/"}>&lt;-</Link>
-      <Table columns={columns} dataSource={ads} bordered size={"small"} />
+      <Table columns={columns} dataSource={data} loading={!data} bordered size={"small"} />
     </div>
   );
 };

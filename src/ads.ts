@@ -3,35 +3,5 @@ export interface Ad {
   name: string;
   company: string;
   description: string;
-  rpm: number;
+  cpm: number;
 }
-export const ads: Ad[] = [
-  {
-    id: 1,
-    name: "Cola Coca",
-    company: "Cola Coca Co",
-    description: "Company that makes a brand of soft drink ",
-    rpm: 1.16,
-  },
-  {
-    id: 2,
-    name: "Legal Assistance",
-    company: "Hopkins Law Firm",
-    description: "Company for providing legal assistance to people",
-    rpm: 2.07,
-  },
-  {
-    id: 3,
-    name: "Health Insurance",
-    company: "Davenport Health Insurance",
-    description: "Company for providing health insurance",
-    rpm: 3.08,
-  },
-  {
-    id: 4,
-    name: "Life Insurance",
-    company: "Blaine Life Insurance",
-    description: "Compnay for providing life insurance",
-    rpm: 2.11,
-  },
-];

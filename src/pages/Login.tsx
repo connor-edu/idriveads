@@ -1,51 +1,75 @@
 import { css, cx } from "@emotion/css";
 import { Alert, Button, Card, Form, Input } from "antd";
 import { useCallback, useState } from "react";
-import { useDispatch } from "react-redux";
+import { HTTPError } from "ky";
 import { container } from "../comonents/container";
-import { accounts, setAccount } from "../store";
+import { mutate } from "swr";
+import ky from "../utils";
 
 const Login = () => {
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isRegistering, setRegister] = useState(false);
-  const dispatch = useDispatch();
-  const login = useCallback((e) => {
+  const login = useCallback(async (e) => {
     setError(null);
-    const attempt = accounts.get(e.email);
-    if (!attempt) {
-      setError("Account not found.");
-      return;
-    }
+    setLoading(false);
 
-    if (attempt.password !== e.password) {
-      setError("Account not found.");
-      return;
+    try {
+      const data = await ky
+        .post("auth/login", {
+          json: {
+            email: e.email,
+            password: e.password,
+          },
+        })
+        .json<{
+          accessToken: string;
+        }>();
+      window.localStorage.setItem("idriveadsAccessToken", data.accessToken);
+      mutate("auth/account");
+    } catch (e) {
+      if (e instanceof HTTPError) {
+        const err = await e.response.json();
+        setError(err.message);
+      }
+    } finally {
+      setLoading(false);
     }
-
-    dispatch(setAccount(attempt));
   }, []);
-  const register = useCallback((e) => {
+  const register = useCallback(async (e) => {
     setError(null);
-    const attempt = accounts.get(e.email);
-    if (attempt) {
-      setError("Account already found.");
-      return;
-    }
+    setLoading(false);
 
     if (e.password !== e.confirm_password) {
       setError("Passwords don't match");
+      setLoading(false);
       return;
     }
 
-    const account = {
-      id: Math.random() * 500242 + 1,
-      name: e.name,
-      email: e.email,
-      password: e.password,
-    };
-    accounts.set(account.email, account);
+    console.log(e);
 
-    dispatch(setAccount(account));
+    try {
+      const data = await ky
+        .post("auth/register", {
+          json: {
+            email: e.email,
+            password: e.password,
+            name: e.name,
+          },
+        })
+        .json<{
+          accessToken: string;
+        }>();
+      window.localStorage.setItem("idriveadsAccessToken", data.accessToken);
+      mutate("auth/account");
+    } catch (e) {
+      if (e instanceof HTTPError) {
+        const err = await e.response.json();
+        setError(err.message);
+      }
+    } finally {
+      setLoading(false);
+    }
   }, []);
   if (!isRegistering) {
     return (
@@ -57,7 +81,7 @@ const Login = () => {
           `
         )}>
         <Form layout={"vertical"} onFinish={login}>
-          <Card title={"Login"}>
+          <Card title={"Login"} loading={loading}>
             {error && (
               <Alert
                 message={error}
@@ -109,7 +133,7 @@ const Login = () => {
           `
         )}>
         <Form layout={"vertical"} onFinish={register}>
-          <Card title={"Register"}>
+          <Card title={"Register"} loading={loading}>
             {error && (
               <Alert
                 message={error}

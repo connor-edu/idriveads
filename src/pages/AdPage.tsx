@@ -1,15 +1,22 @@
 import { css } from "@emotion/css";
-import { Descriptions, PageHeader, Statistic } from "antd";
-import { useMemo } from "react";
+import { Descriptions, PageHeader, Result, Statistic } from "antd";
 import { useHistory, useParams } from "react-router-dom";
-import { ads } from "../ads";
+import useSWR from "swr";
+import type { Ad } from "../ads";
+import Loader from "../comonents/Loader";
 
 const AdPage = () => {
   const { id } = useParams<{ id: string }>();
-  const ad = useMemo(() => {
-    return ads.find((a) => a.id === Number(id))!;
-  }, [id]);
+  const { data: ad, error } = useSWR<Ad>("ads/" + id);
   const history = useHistory();
+  if (error) {
+    return <Result status={"404"} />;
+  }
+
+  if (!ad) {
+    return <Loader />;
+  }
+
   return (
     <>
       <PageHeader
@@ -23,8 +30,8 @@ const AdPage = () => {
           <Descriptions.Item label={"Description"}>{ad.description}</Descriptions.Item>
         </Descriptions>
         <Statistic
-          title={"RPM"}
-          value={`$${ad.rpm}`}
+          title={"CPM"}
+          value={`$${ad.cpm}`}
           style={{
             marginRight: 32,
           }}
