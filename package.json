@@ -1,6 +1,10 @@
 {
   "name": "idriveads",
   "private": true,
+  "scripts": {
+    "build": "yarn --cwd server build",
+    "start": "yarn --cwd server start"
+  },
   "workspaces": [
     "client",
     "server"
