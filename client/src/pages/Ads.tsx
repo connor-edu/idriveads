@@ -33,6 +33,13 @@ const columns: Array<ColumnType<Ad>> = [
     sorter: (a, b) => {
       return a.cpm - b.cpm;
     },
+    align: "right",
+    render(_, item) {
+      return Number(item.cpm).toLocaleString("en-US", {
+        style: "currency",
+        currency: "USD",
+      });
+    },
   },
 ];
 
@@ -58,6 +65,7 @@ const Ads = () => {
         dataSource={data}
         loading={!data}
         bordered
+        tableLayout={"fixed"}
       />
     </div>
   );
