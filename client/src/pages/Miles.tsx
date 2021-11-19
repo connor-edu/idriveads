@@ -76,7 +76,7 @@ const Payment = () => {
         ghost={false}
         title={"Milage History"}
         onBack={() => {
-          navigate("/account");
+          navigate("/");
         }}
       />
       <div

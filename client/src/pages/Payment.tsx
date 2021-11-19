@@ -1,12 +1,11 @@
 import { css } from "@emotion/css";
-import { Alert, Button, Card, Form, Input, PageHeader, Typography } from "antd";
-import { useCallback, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Button, Card, PageHeader, Typography } from "antd";
+import { useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import useSWR from "swr";
-import ky, { API_URL } from "../utils";
+import ky from "../utils";
 
 const Payment = () => {
-  const [error, setError] = useState();
   const navigate = useNavigate();
   const { data } = useSWR("payments");
   const setup = useCallback(async () => {
