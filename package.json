@@ -16,6 +16,8 @@
     "eslint-formatter-pretty": "^4.1.0",
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-react": "^7.27.0",
+    "eslint-config-a1motion": "^3.4.2",
+    "eslint-config-prettier": "^8.3.0",
     "prettier": "^2.4.1",
     "typescript": "^4.4.4"
   }

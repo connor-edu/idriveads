@@ -1,5 +1,6 @@
 import type { RequestHandler } from "express";
 import jwt from "jsonwebtoken";
+import Stripe from "stripe";
 import { JWT_SECRET } from "./auth";
 import db from "./db";
 
@@ -23,4 +24,8 @@ const getUser: RequestHandler = async (req, _, next) => {
   return next();
 };
 
-export { getUser };
+const stripe = new Stripe(process.env.STRIPE_KEY!, {
+  apiVersion: "2020-08-27",
+});
+
+export { getUser, stripe };

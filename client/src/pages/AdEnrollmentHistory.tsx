@@ -24,25 +24,24 @@ const columns: Array<ColumnType<Ad>> = [
     },
   },
   {
-    dataIndex: "description",
-    title: "Description",
-  },
-  {
-    dataIndex: "cpm",
-    title: "CPM",
+    dataIndex: "enrolled_on",
+    title: "Date Enrolled",
     sorter: (a, b) => {
-      return a.cpm - b.cpm;
+      return new Date(b.enrolled_on).getTime() - new Date(a.enrolled_on).getTime();
+    },
+    render(v) {
+      return new Date(v).toLocaleDateString();
     },
   },
 ];
 
-const Ads = () => {
-  const { data } = useSWR<Ad[]>("ads");
+const AdEnrollmentHistory = () => {
+  const { data } = useSWR<Ad[]>("ads/history");
   const navigation = useNavigate();
   return (
     <div>
       <PageHeader
-        title={"Ads Catalog"}
+        title={"Ad Enrollment History"}
         onBack={() => navigation(-1)}
         className={css`
           background-color: #f0f2f5 !important;
@@ -63,4 +62,4 @@ const Ads = () => {
   );
 };
 
-export default Ads;
+export default AdEnrollmentHistory;

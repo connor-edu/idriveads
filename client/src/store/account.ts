@@ -3,6 +3,11 @@ export interface Account {
   email: string;
   password: string;
   name: string;
+  vehicle_make?: string;
+  vehicle_model?: string;
+  vehicle_year?: string;
+  zipcode?: string;
+  miles_per_day?: string;
 }
 export const accounts = new Map<string, Account>();
 

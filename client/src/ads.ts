@@ -4,4 +4,6 @@ export interface Ad {
   company: string;
   description: string;
   cpm: number;
+  enrolled: boolean;
+  enrolled_on: string;
 }

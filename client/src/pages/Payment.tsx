@@ -1,46 +1,79 @@
 import { css } from "@emotion/css";
-import { Alert, Button, Card, Form, Input } from "antd";
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Alert, Button, Card, Form, Input, PageHeader, Typography } from "antd";
+import { useCallback, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import useSWR from "swr";
+import ky, { API_URL } from "../utils";
 
 const Payment = () => {
   const [error, setError] = useState();
+  const navigate = useNavigate();
+  const { data } = useSWR("payments");
+  const setup = useCallback(async () => {
+    const link = await ky.get("payments/setup").json<string>();
+    location.href = link;
+  }, []);
+  const dashboard = useCallback(async () => {
+    const link = await ky.get("payments/dashboard").json<string>();
+    location.href = link;
+  }, []);
   return (
     <div>
-      <Link to={"/account"}>&lt;-</Link>
-      <Form layout={"vertical"}>
-        <Card title={"Payment Information"}>
-          {error && (
-            <Alert
-              message={error}
-              type={"error"}
-              className={css`
-                margin-bottom: 1em !important;
-              `}
-            />
-          )}
-          <Form.Item label={"Bank Name"} name={"bank"}>
-            <Input />
-          </Form.Item>
-          <Form.Item label={"Routing Number"} name={"router"}>
-            <Input name={"email"} />
-          </Form.Item>
-          <Form.Item label={"Account Number"} name={"account"}>
-            <Input name={"password"} />
-          </Form.Item>
-          <Form.Item
+      <PageHeader
+        className={css`
+          background-color: #f0f2f5 !important;
+          border-radius: 8px;
+        `}
+        ghost={false}
+        title={"Payment Information"}
+        onBack={() => {
+          navigate("/account");
+        }}
+      />
+      <Card
+        loading={!data}
+        className={css`
+          margin-top: 2rem !important;
+        `}>
+        {data?.code === "setup" && (
+          <div
             className={css`
-              & .ant-form-item-control-input-content {
-                display: flex;
-                justify-content: center;
-              }
+              display: flex;
+              flex-direction: column;
+              align-items: center;
             `}>
-            <Button htmlType={"submit"} type={"primary"}>
-              Submit
+            <Typography.Title
+              level={4}
+              className={css`
+                text-align: center;
+              `}>
+              Setup payment account to enable payouts.
+            </Typography.Title>
+            <Button size={"large"} type={"primary"} onClick={setup}>
+              Setup
             </Button>
-          </Form.Item>
-        </Card>
-      </Form>
+          </div>
+        )}
+        {data?.code === "success" && (
+          <div
+            className={css`
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+            `}>
+            <Typography.Title
+              level={4}
+              className={css`
+                text-align: center;
+              `}>
+              View Balance and Payout information in your Dashboard.
+            </Typography.Title>
+            <Button size={"large"} type={"primary"} onClick={dashboard}>
+              Dashboard
+            </Button>
+          </div>
+        )}
+      </Card>
     </div>
   );
 };
